@@ -1,4 +1,3 @@
-# import the necessary packages
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.preprocessing.image import load_img
 from tensorflow.keras.preprocessing.image import img_to_array
@@ -30,18 +29,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
-# initialize the initial learning rate, number of epochs to train for,
-# and batch size
+
 INIT_LR = 1e-4
 EPOCHS = 20
 BS = 32
 
-DIRECTORY = r"F:\Download\Face-Mask-Detection\Face-Mask-Detection-master\dataset"
-CATEGORIES = ["with_mask", "without_mask"]
+DIRECTORY =os.path.dirname(__file__)
+CATEGORIES = ["dataset\with_mask", "dataset\without_mask"]
 
-# grab the list of images in our dataset directory, then initialize
-# the list of data (i.e., images) and class images
-print("[INFO] loading images...")
+print("[brijesh] loading images...")
 
 data = []
 labels = []
@@ -101,13 +97,13 @@ for layer in baseModel.layers:
     layer.trainable = False
 
 # compile our model
-print("[INFO] compiling model...")
+print("[brijesh] compiling model...")
 opt = Adam(lr=INIT_LR, decay=INIT_LR / EPOCHS)
 model.compile(loss="binary_crossentropy", optimizer=opt,
               metrics=["accuracy"])
 
 # train the head of the network
-print("[INFO] training head...")
+print("[brijesh] training head...")
 H = model.fit(
     aug.flow(trainX, trainY, batch_size=BS),
     steps_per_epoch=len(trainX) // BS,
@@ -116,7 +112,7 @@ H = model.fit(
     epochs=EPOCHS)
 
 # make predictions on the testing set
-print("[INFO] evaluating network...")
+print("[brijesh] evaluating network...")
 predIdxs = model.predict(testX, batch_size=BS)
 
 # for each image in the testing set we need to find the index of the
@@ -128,7 +124,7 @@ print(classification_report(testY.argmax(axis=1), predIdxs,
                             target_names=lb.classes_))
 
 # serialize the model to disk
-print("[INFO] saving mask detector model...")
+print("[brijesh] saving mask detector model...")
 model.save("mask_detector.model", save_format="h5")
 
 # plot the training loss and accuracy

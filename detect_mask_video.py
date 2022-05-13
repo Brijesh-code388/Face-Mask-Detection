@@ -20,7 +20,7 @@ def detect_and_predict_mask(frame, faceNet, maskNet):
     # pass the blob through the network and obtain the face detections
     faceNet.setInput(blob)
     detections = faceNet.forward()
-    print(detections.shape)
+    # print(detections.shape)
 
     # initialize our list of faces, their corresponding locations,
     # and the list of predictions from our face mask network
@@ -85,6 +85,8 @@ maskNet = load_model("mask_detector.model")
 print("[INFO] starting video stream...")
 vs = VideoStream(src=0).start()
 
+pt=0
+
 # loop over the frames from the video stream
 while True:
     # grab the frame from the threaded video stream and resize it
@@ -117,7 +119,13 @@ while True:
                     cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 2)
         cv2.rectangle(frame, (startX, startY), (endX, endY), color, 2)
 
+    #frame per second
+    t=time.time();
+    print(1/(t-pt));
+    pt=t;
+
     # show the output frame
+    
     cv2.imshow("Frame", frame)
     key = cv2.waitKey(1) & 0xFF
 
